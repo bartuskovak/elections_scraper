@@ -85,7 +85,7 @@ if __name__ == '__main__':
             rows = tbl.findChildren("tr")[2:]
             for row in rows:
                 cols = row.findChildren()
-                line[cols[1].text] = cols[2].text
+                line[cols[1].text] = unicodedata.normalize("NFKD",cols[2].text)
 
         out_list.append(line)
         print(line)
