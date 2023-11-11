@@ -1,16 +1,15 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
 import sys
 from requests import get
 from bs4 import BeautifulSoup
 import unicodedata
 import pandas as pd
 
-
 def read_input_params(argv):
+    """
+    This function reads input arguments. First argument: url, second argument: output file name.
+    :param argv: command line arguments
+    :return: url, output file name
+    """
     if len(argv) <= 1:
         raise Exception("incorect input arguments, enter parameters <url> [output file name]")
     if len(argv) == 2:
@@ -19,8 +18,13 @@ def read_input_params(argv):
         return argv[1], argv[2]
 
 
-# get districts links and ids
 def process_table(root_url, table):
+    """
+    This function gets districts links and ids.
+    :param root_url: url
+    :param table: beautifulsoup object
+    :return: list of district links and ids
+    """
     links = []
     link_cols = table.find_all("td", "cislo")
     for link_col in link_cols:
@@ -31,6 +35,11 @@ def process_table(root_url, table):
 
 
 def get_districts(page_url):
+    """
+    This function gets root url from input url.
+    :param page_url:
+    :return:
+    """
     # get root url from input url
     root_url = "https://www.volby.cz/pls/ps2017nss/"
 
@@ -46,19 +55,13 @@ def get_districts(page_url):
 
     return page, out_districts
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-
-    url = "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=2&xnumnuts=2109"
-    out_file_name = "output.csv"
-
-    try:
-        url, out_file_name = read_input_params(sys.argv)
-    except Exception as err:
-        print(err)
-
-    main_page, districts = get_districts(url)
+def create_output(main_page, districts):
+    """
+    This function gets all data that we need and creates output
+    :param main_page:
+    :param districts:
+    :return:
+    """
     out_list = []
     for district in districts:
         district_response = get(district["url"])
@@ -75,7 +78,7 @@ if __name__ == '__main__':
         line = {
             "code": district["code"],
             "location": location,
-            "registered": unicodedata.normalize("NFKD",cols[3].text),
+            "registered": unicodedata.normalize("NFKD", cols[3].text),
             "envelopes": unicodedata.normalize("NFKD", cols[6].text),
             "valid": unicodedata.normalize("NFKD", cols[7].text),
         }
@@ -85,11 +88,27 @@ if __name__ == '__main__':
             rows = tbl.findChildren("tr")[2:]
             for row in rows:
                 cols = row.findChildren()
-                line[cols[1].text] = unicodedata.normalize("NFKD",cols[2].text)
+                line[cols[1].text] = unicodedata.normalize("NFKD", cols[2].text)
 
         out_list.append(line)
         print(line)
 
     df = pd.DataFrame(out_list)
     df.to_csv(out_file_name, index=False, header=True)
+
+# main entry point
+if __name__ == '__main__':
+
+    url = "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=2&xnumnuts=2109"
+    out_file_name = "output.csv"
+
+    try:
+        url, out_file_name = read_input_params(sys.argv)
+    except Exception as err:
+        print(err)
+
+    main_page, districts = get_districts(url)
+
+    create_output(main_page, districts)
+
 
