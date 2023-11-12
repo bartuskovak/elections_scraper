@@ -1,3 +1,10 @@
+"""
+elections_scraper.py: třetí projekt do Engeto Online Python Akademie
+
+author: Kateřina Bartušková
+email: kati.bartuskova@gmail.com
+discord: bartuskovak
+"""
 import sys
 from requests import get
 from bs4 import BeautifulSoup
