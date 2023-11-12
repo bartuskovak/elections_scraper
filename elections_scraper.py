@@ -11,11 +11,9 @@ def read_input_params(argv):
     :param argv: command line arguments
     :return: url, output file name
     """
-    if len(argv) <= 1:
-        raise Exception("incorect input arguments, enter parameters <url> [output file name]")
-    if len(argv) == 2:
-        return argv[1], "output.csv"
-    if len(argv) == 3:
+    if len(argv) != 3:
+        raise Exception("incorect input arguments, enter parameters <url> <output file name>")
+    else:
         return argv[1], argv[2]
 
 
@@ -98,7 +96,7 @@ def create_output(districts):
 if __name__ == '__main__':
 
     #url = "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=2&xnumnuts=2109"
-    out_file_name = "output.csv"
+    #out_file_name = "output.csv"
 
     try:
         url, out_file_name = read_input_params(sys.argv)

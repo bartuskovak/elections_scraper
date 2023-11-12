@@ -12,7 +12,7 @@ Pro instalaci doporučuji použít nové virtuální prostředí a s nainstalova
 pip3 --version
 pip3 --install -r requirements.txt
 Spuštění projektu:
-Spuštění souboru elections_scraper.py v rámci příkazového řádku požaduje jeden povinný a jeden volitelný argument.
+Spuštění souboru elections_scraper.py v rámci příkazového řádku požaduje dva povinné argumenty.
 
 > python elections_scraper url vystupni_soubor
 
